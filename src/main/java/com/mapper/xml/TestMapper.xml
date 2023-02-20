@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.TestMapper">
+    <resultMap id="BaseResultMap" type="com.models.entity.Test">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+
+        <result column="created_date" jdbcType="DATE" property="createdDate"/>
+        <result column="last_update_date" jdbcType="DATE" property="lastUpdateDate"/>
+        <result column="created_by" jdbcType="VARCHAR" property="createdBy"/>
+        <result column="last_update_by" jdbcType="VARCHAR" property="lastUpdatedBy"/>
+        <result column="version" jdbcType="INTEGER" property="version"/>
+
+
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , email, user_id, user_name, created_date, last_update_date, created_by, last_update_by, version
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from test
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from test
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <delete id="deleteAll">
+        delete
+        from test
+    </delete>
+
+    <insert id="insert" parameterType="com.models.entity.Test" useGeneratedKeys="true" keyProperty="id">
+      <!--  <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+            SELECT max(id)+1 from test
+        </selectKey>-->
+
+        insert into test (<include refid="Base_Column_List"/>)
+        values (#{id,jdbcType=INTEGER}, #{email,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER},
+        #{userName,jdbcType=VARCHAR},
+        #{createdDate,jdbcType=DATE},
+        #{lastUpdateDate,jdbcType=DATE}, #{createdBy,jdbcType=VARCHAR}, #{lastUpdateBy,jdbcType=VARCHAR},
+        #{version,jdbcType=INTEGER} )
+    </insert>
+    <insert id="insertSelective" parameterType="com.models.entity.Test">
+        insert into test
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.models.entity.Test">
+        update test
+        <set>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.models.entity.Test">
+        update test
+        set email     = #{email,jdbcType=VARCHAR},
+            user_id   = #{userId,jdbcType=INTEGER},
+            user_name = #{userName,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

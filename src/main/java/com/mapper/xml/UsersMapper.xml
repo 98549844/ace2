@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.UsersMapper">
+    <resultMap id="BaseResultMap" type="com.models.entity.Users">
+        <id column="userId" jdbcType="BIGINT" property="userId"/>
+        <result column="createdBy" jdbcType="BIGINT" property="createdBy"/>
+        <result column="createdDate" jdbcType="TIMESTAMP" property="createdDate"/>
+        <result column="lastUpdateDate" jdbcType="TIMESTAMP" property="lastUpdateDate"/>
+        <result column="lastUpdatedBy" jdbcType="BIGINT" property="lastUpdatedBy"/>
+        <result column="version" jdbcType="INTEGER" property="version"/>
+        <result column="age" jdbcType="BIGINT" property="age"/>
+        <result column="dateOfBirth" jdbcType="TIMESTAMP" property="dateOfBirth"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="domain" jdbcType="VARCHAR" property="domain"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="enabled" jdbcType="BIT" property="enabled"/>
+        <result column="expireDate" jdbcType="TIMESTAMP" property="expireDate"/>
+        <result column="gender" jdbcType="VARCHAR" property="gender"/>
+        <result column="hostName" jdbcType="VARCHAR" property="hostName"/>
+        <result column="ip" jdbcType="VARCHAR" property="ip"/>
+        <result column="loginDateTime" jdbcType="TIMESTAMP" property="loginDateTime"/>
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="userAccount" jdbcType="VARCHAR" property="userAccount"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        userId, createdBy, createdDate, lastUpdateDate, lastUpdatedBy, version, age, dateOfBirth,
+     description, `domain`, email, enabled, expireDate, gender, hostName, ip, loginDateTime,
+     mobile, `password`, remark, `status`, userAccount, username
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from users
+        where userId = #{userId,jdbcType=BIGINT}
+    </select>
+
+
+    <select id="selectByAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from users
+        where userAccount = #{userAccount,jdbcType=VARCHAR}
+    </select>
+
+
+    <select id="findAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from users
+    </select>
+
+
+    <select id="findUsersLikeNameByMybatis" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from users
+        where username like #{userName,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getUserRolePermissionById" parameterType="java.lang.Long" resultType="java.util.Map">
+        select u.userId userId,
+               u.createdBy createdBy,
+               u.createdDate createdDate,
+               u.lastUpdateDate lastUpdateDate,
+               u.lastUpdatedBy lastUpdatedBy,
+               u.version version,
+               u.age age,
+               u.dateOfBirth dateOfBirth,
+               u.description description,
+               u.domain `domain`,
+               u.email email,
+               u.enabled enabled,
+               u.expireDate expireDate,
+               u.gender gender,
+               u.hostName hostName,
+               u.ip ip,
+               u.loginDateTime loginDateTime,
+               u.mobile mobile,
+               u.password password,
+               u.remark remark,
+               u.status status,
+               u.userAccount userAccount,
+               u.username username,
+               r.roleId roleId,
+               r.roleCode roleCode,
+               r.roleName roleName,
+               p.permissionsId permissionsId,
+               p.action `action`,
+               p.description description,
+               p.permissionCode permissionCode
+        from role_permissions rp,
+             permissions p,
+             roles r,
+             user_roles ur,
+             users u
+        where 1 = 1
+          and rp.permissionsId = p.permissionsId
+          and rp.roleId = r.roleId
+          and ur.roleId = r.roleId
+          and ur.userId = u.userId
+          and u.userId = #{userId,jdbcType=BIGINT}
+        order by userId
+    </select>
+
+    <!--<select id="getUserRolePermissionById" parameterType="java.lang.Long" resultType="java.util.Map">
+        select u.userId userId,
+               u.createdBy createdBy,
+               u.createdDate createdDate,
+               u.lastUpdateDate lastUpdateDate,
+               u.lastUpdatedBy lastUpdatedBy,
+               u.version version,
+               u.age age,
+               u.dateOfBirth dateOfBirth,
+               u.description description,
+               u.domain `domain`,
+               u.email email,
+               u.enabled enabled,
+               u.expireDate expireDate,
+               u.gender gender,
+               u.hostName hostName,
+               u.ip ip,
+               u.loginDateTime loginDateTime,
+               u.mobile mobile,
+               u.password password,
+               u.remark remark,
+               u.status status,
+               u.userAccount userAccount,
+               u.username username,
+               r.roleId roleId,
+               &#45;&#45; r.createdBy,
+               &#45;&#45; r.createdDate,
+               &#45;&#45; r.lastUpdateDate,
+               &#45;&#45; r.lastUpdatedBy,
+               &#45;&#45; r.version,
+               r.roleCode roleCode,
+               r.roleName roleName,
+               p.permissionsId permissionsId,
+               &#45;&#45; p.createdBy,
+               &#45;&#45; p.createdDate,
+               &#45;&#45; p.lastUpdateDate,
+               &#45;&#45; p.lastUpdatedBy,
+               &#45;&#45; p.version,
+               p.action `action`,
+               p.description description,
+               &#45;&#45; p.enabled enabled,
+               p.permissionCode permissionCode
+        from role_permissions rp,
+             permissions p,
+             roles r,
+             user_roles ur,
+             users u
+        where 1 = 1
+          and rp.permissionsId = p.permissionsId
+          and rp.roleId = r.roleId
+          and ur.roleId = r.roleId
+          and ur.userId = u.userId
+          and u.userId = #{userId,jdbcType=BIGINT}
+        order by userId
+    </select>-->
+
+    <select id="findAllUserRolePermissionByMybatis" resultType="java.util.Map">
+        select u.userId,
+               r.roleId,
+               p.permissionsId,
+               p.permissionCode,
+               u.username,
+               p.action,
+               r.roleCode,
+               u.description,
+               u.userAccount
+        from role_permissions rp,
+             permissions p,
+             roles r,
+             user_roles ur,
+             users u
+        where 1 = 1
+          and rp.permissionsId = p.permissionsId
+          and rp.roleId = r.roleId
+          and ur.roleId = r.roleId
+          and ur.userId = u.userId
+        order by userId
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from users
+        where userId = #{userId,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="userId" keyProperty="userId" parameterType="com.models.entity.Users"
+            useGeneratedKeys="true">
+        <selectKey keyProperty="users.userId" order="AFTER" resultType="java.lang.Long"></selectKey>
+        insert into users (createdBy, createdDate, lastUpdateDate,
+        lastUpdatedBy, version, age,
+        dateOfBirth, description, `domain`,
+        email, enabled, expireDate,
+        gender, hostName, ip,
+        loginDateTime, mobile, `password`,
+        remark, `status`, userAccount,
+        username)
+        values (#{createdBy,jdbcType=BIGINT}, #{createdDate,jdbcType=TIMESTAMP}, #{lastUpdateDate,jdbcType=TIMESTAMP},
+        #{lastUpdatedBy,jdbcType=BIGINT}, #{version,jdbcType=INTEGER}, #{age,jdbcType=BIGINT},
+        #{dateOfBirth}, #{description,jdbcType=VARCHAR}, #{domain,jdbcType=VARCHAR},
+        #{email,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT}, #{expireDate,jdbcType=TIMESTAMP},
+        #{gender,jdbcType=VARCHAR}, #{hostName,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR},
+        #{loginDateTime,jdbcType=TIMESTAMP}, #{mobile,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+        #{remark,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{userAccount,jdbcType=VARCHAR},
+        #{username,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" keyColumn="userId" keyProperty="userId" parameterType="com.models.entity.Users"
+            useGeneratedKeys="true">
+        insert into users
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createdby != null">
+                createdBy,
+            </if>
+            <if test="createddate != null">
+                createdDate,
+            </if>
+            <if test="lastupdatedate != null">
+                lastUpdateDate,
+            </if>
+            <if test="lastupdatedby != null">
+                lastUpdatedBy,
+            </if>
+            <if test="version != null">
+                version,
+            </if>
+            <if test="age != null">
+                age,
+            </if>
+            <if test="dateOfBirth != null">
+                dateOfBirth,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="domain != null">
+                `domain`,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="enabled != null">
+                enabled,
+            </if>
+            <if test="expiredate != null">
+                expireDate,
+            </if>
+            <if test="gender != null">
+                gender,
+            </if>
+            <if test="hostname != null">
+                hostName,
+            </if>
+            <if test="ip != null">
+                ip,
+            </if>
+            <if test="logindatetime != null">
+                loginDateTime,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="password != null">
+                `password`,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="status != null">
+                `status`,
+            </if>
+            <if test="useraccount != null">
+                userAccount,
+            </if>
+            <if test="username != null">
+                username,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createdby != null">
+                #{createdBy,jdbcType=BIGINT},
+            </if>
+            <if test="createddate != null">
+                #{createdDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastupdatedate != null">
+                #{lastUpdateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastupdatedby != null">
+                #{lastUpdatedBy,jdbcType=BIGINT},
+            </if>
+            <if test="version != null">
+                #{version,jdbcType=INTEGER},
+            </if>
+            <if test="age != null">
+                #{age,jdbcType=BIGINT},
+            </if>
+            <if test="dateOfBirth != null">
+                #{dateOfBirth,jdbcType=TIMESTAMP},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="domain != null">
+                #{domain,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="enabled != null">
+                #{enabled,jdbcType=BIT},
+            </if>
+            <if test="expiredate != null">
+                #{expireDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gender != null">
+                #{gender,jdbcType=VARCHAR},
+            </if>
+            <if test="hostname != null">
+                #{hostName,jdbcType=VARCHAR},
+            </if>
+            <if test="ip != null">
+                #{ip,jdbcType=VARCHAR},
+            </if>
+            <if test="logindatetime != null">
+                #{loginDateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="useraccount != null">
+                #{userAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.models.entity.Users">
+        update users
+        <set>
+            <if test="createdby != null">
+                createdBy = #{createdBy,jdbcType=BIGINT},
+            </if>
+            <if test="createddate != null">
+                createdDate = #{createdDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastupdatedate != null">
+                lastUpdateDate = #{lastUpdateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastupdatedby != null">
+                lastUpdatedBy = #{lastUpdatedBy,jdbcType=BIGINT},
+            </if>
+            <if test="version != null">
+                version = #{version,jdbcType=INTEGER},
+            </if>
+            <if test="age != null">
+                age = #{age,jdbcType=BIGINT},
+            </if>
+            <if test="dateOfBirth != null">
+                dateOfBirth = #{dateOfBirth,jdbcType=TIMESTAMP},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="domain != null">
+                `domain` = #{domain,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="enabled != null">
+                enabled = #{enabled,jdbcType=BIT},
+            </if>
+            <if test="expiredate != null">
+                expireDate = #{expireDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gender != null">
+                gender = #{gender,jdbcType=VARCHAR},
+            </if>
+            <if test="hostname != null">
+                hostName = #{hostName,jdbcType=VARCHAR},
+            </if>
+            <if test="ip != null">
+                ip = #{ip,jdbcType=VARCHAR},
+            </if>
+            <if test="logindatetime != null">
+                loginDateTime = #{loginDateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                `password` = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                `status` = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="useraccount != null">
+                userAccount = #{userAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where userId = #{userId,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.models.entity.Users">
+        update users
+        set createdBy      = #{createdBy,jdbcType=BIGINT},
+            createdDate    = #{createdDate,jdbcType=TIMESTAMP},
+            lastUpdateDate = #{lastUpdateDate,jdbcType=TIMESTAMP},
+            lastUpdatedBy  = #{lastUpdatedBy,jdbcType=BIGINT},
+            version        = #{version,jdbcType=INTEGER},
+            age            = #{age,jdbcType=BIGINT},
+            dateOfBirth    = #{dateOfBirth,jdbcType=TIMESTAMP},
+            description    = #{description,jdbcType=VARCHAR},
+            `domain`       = #{domain,jdbcType=VARCHAR},
+            email          = #{email,jdbcType=VARCHAR},
+            enabled        = #{enabled,jdbcType=BIT},
+            expireDate     = #{expireDate,jdbcType=TIMESTAMP},
+            gender         = #{gender,jdbcType=VARCHAR},
+            hostName       = #{hostName,jdbcType=VARCHAR},
+            ip             = #{ip,jdbcType=VARCHAR},
+            loginDateTime  = #{loginDateTime,jdbcType=TIMESTAMP},
+            mobile         = #{mobile,jdbcType=VARCHAR},
+            `password`     = #{password,jdbcType=VARCHAR},
+            remark         = #{remark,jdbcType=VARCHAR},
+            `status`       = #{status,jdbcType=VARCHAR},
+            userAccount    = #{userAccount,jdbcType=VARCHAR},
+            username       = #{username,jdbcType=VARCHAR}
+        where userId = #{userId,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByAccount" parameterType="com.models.entity.Users">
+        update users
+        set mobile   = #{mobile,jdbcType=VARCHAR},
+            hostName = #{hostName,jdbcType=VARCHAR},
+            ip       = #{ip,jdbcType=VARCHAR}
+        where userAccount = #{userAccount,jdbcType=VARCHAR}
+    </update>
+</mapper>

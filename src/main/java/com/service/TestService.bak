@@ -1,0 +1,155 @@
+package com.service;
+
+import com.restController.AceRestController;
+import com.dao.TestDao;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+
+import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class TestService {
+    private static Logger log = LogManager.getLogger(AceRestController.class.getName());
+
+    private TestDao testDao;
+
+    @Autowired
+    public TestService(TestDao testDao) {
+        this.testDao = testDao;
+    }
+
+    /**
+     * @return all result
+     */
+    public List<Test> getAll() {
+        List<Test> list = null;
+        try {
+            list = testDao.findAll();
+        } catch (Exception e) {
+            log.error(e);
+        }
+        return list;
+    }
+
+    /**
+     * @param test obj
+     * @return accord object return list
+     */
+    public List<Test> getTestEntities(Test test) {
+        List<Test> list = null;
+        try {
+            Specification<Test> sp = toPredicate(test);
+            list = testDao.findAll(sp);
+        } catch (Exception e) {
+            log.error(e);
+        }
+        return list;
+    }
+
+    public Test getTestEntityById(int id) {
+        Test test = testDao.findById(id);
+        if (test == null) {
+            return null;
+        }
+        return test;
+    }
+
+    /**
+     * @param test
+     * @return
+     */
+    public boolean save(Test test) {
+        try {
+            testDao.save(test);
+        } catch (Exception e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param testEntities
+     * @return
+     */
+    public boolean saveAll(Iterable<Test> testEntities) {
+        try {
+            testDao.saveAll(testEntities);
+        } catch (Exception e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean update(Test test) {
+        try {
+            if (test != null) {
+                testDao.update(test);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param test del by object
+     * @return boolean
+     */
+    public boolean delete(Test test) {
+        try {
+            List<Test> list = getTestEntities(test);
+            for (Test t : list) {
+                delete(t.getId());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        }
+        return true;
+    }
+
+    public boolean delete(long id) {
+        try {
+            testDao.deleteById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return false;
+        }
+        return true;
+    }
+
+    private Specification<Test> toPredicate(Test test) {
+        Specification<Test> sp = (Specification<Test>) (root, query, criteriaBuilder) -> {
+            List<Predicate> predicatesList = new ArrayList<>();
+
+            if (test.getEmail() != null) {
+                Predicate predicate = criteriaBuilder.like(root.get("email"), "%" + test.getEmail() + "%");
+                predicatesList.add(predicate);
+            }
+            if (test.getUserId() != null) {
+                Predicate predicate = criteriaBuilder.greaterThan(root.get("userId"), test.getUserId());
+                predicatesList.add(predicate);
+            }
+            if (test.getUserName() != null) {
+                Predicate predicate = criteriaBuilder.equal(root.get("userName"), test.getUserName());
+                predicatesList.add(predicate);
+            }
+            return criteriaBuilder.and(predicatesList.toArray(new Predicate[predicatesList.size()]));
+        };
+        return sp;
+    }
+}
