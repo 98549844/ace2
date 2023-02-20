@@ -1,0 +1,20 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="sidebar">
+    <!--左菜单列-->
+    <script type="text/javascript">
+        try {
+            ace.settings.loadState('sidebar')
+        } catch (e) {
+        }
+    </script>
+
+    <div class="sidebar-shortcuts" id="sidebar-shortcuts"
+         th:include="templates/ace/pb-pages/sidebar-shortcuts :: sidebar-shortcuts"></div>
+    <!-- /.sidebar-shortcuts -->
+
+    <ul class="nav nav-list" th:include="templates/ace/pb-pages/nav-list :: nav-list"></ul>
+    <!-- /.nav-list -->
+    <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse"
+         th:include="templates/ace/pb-pages/sidebar-collapse :: sidebar-collapse"></div>
+    <!-- /.nav-list collapse -->
+</div>

@@ -1,0 +1,32 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="header">
+    <!--需要引入的文件-->
+</div>
+
+顶部
+th:include="templates/ace/pb-pages/header :: header"
+
+头部菜单
+id="navbar"
+th:include="templates/ace/pb-pages/navbar :: navbar"
+
+左菜单
+id="sidebar"
+th:include="templates/ace/pb-pages/sidebar :: sidebar"
+
+右设置器
+id="ace-settings-container"
+th:include="templates/ace/pb-pages/ace-settings-container :: ace-settings-container"
+
+注脚
+class="footer"
+th:include="templates/ace/pb-pages/footer :: footer"
+
+回顶部键
+id="btn-scroll-up"
+th:include="templates/ace/pb-pages/btn-scroll-up :: btn-scroll-up"
+
+通用script
+<!-- ace scripts -->
+th:include="templates/ace/pb-pages/common-script :: common-script"
+

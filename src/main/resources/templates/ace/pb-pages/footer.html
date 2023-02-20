@@ -1,0 +1,29 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="footer">
+    <!--注脚-->
+    <div class="footer-inner">
+        <div class="footer-content">
+			<span class="bigger-120">
+				<span class="blue bolder">Ace</span>
+				Application &copy; 2013-2023
+			</span>
+            <span class="action-buttons">
+				<a th:href="@{/#}">
+					<i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
+				</a>
+
+				<a th:href="@{/#}">
+					<i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
+				</a>
+
+				<a th:href="@{/#}">
+					<i class="ace-icon fa fa-rss-square orange bigger-150"></i>
+				</a>
+			</span>
+        </div>
+    </div>
+
+    <div id="loading_img" style="display: none;">
+		<img th:src="@{/assets/images/ajax-loaders/ajax-loader-8.gif}" alt="Loading..." />
+	</div>
+</div>

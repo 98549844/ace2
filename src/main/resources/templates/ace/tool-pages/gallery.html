@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="ace/pb-pages/header :: header">
+</head>
+
+<body class="no-skin">
+<div id="navbar" class="navbar navbar-default ace-save-state"
+     th:include="templates/ace/pb-pages/navbar :: navbar"></div>
+
+<div class="main-container ace-save-state" id="main-container">
+    <script type="text/javascript">
+        try {
+            ace.settings.loadState('main-container')
+        } catch (e) {
+        }
+    </script>
+
+    <div id="sidebar" class="sidebar responsive ace-save-state" th:include="templates/ace/pb-pages/sidebar :: sidebar">
+    </div>
+
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs" th:include="ace/pb-pages/breadcrumbs :: breadcrumbs"></div>
+            <div class="page-content" id="page-content">
+                <div class="ace-settings-container" id="ace-settings-container"
+                     th:include="templates/ace/pb-pages/ace-settings-container :: ace-settings-container">
+                </div><!-- /.ace-settings-container -->
+
+                <div class="page-header">
+                    <h1>
+                        <a th:href="@{/ace/gallery.html}">Gallery</a>
+                        <small>
+                            <i class="ace-icon fa fa-angle-double-right"></i>
+                            responsive photo gallery using colorbox
+                        </small>
+                    </h1>
+                </div><!-- /.page-header -->
+
+
+                <button class="btn btn-app btn-danger btn-sm" id="delete-all">
+                    <i class="ace-icon fa fa-trash-o bigger-200"></i>
+                    Delete All
+                </button>
+                <div class="col-xs-11">
+                    <div id="accordion" class="page-header accordion-style1 panel-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                       data-parent="#accordion"
+                                       href="#collapseOne">
+                                        <i class="ace-icon fa fa-angle-right bigger-110"
+                                           data-icon-hide="ace-icon fa fa-angle-down"
+                                           data-icon-show="ace-icon fa fa-angle-right"></i>
+                                        &nbsp;Dropzone:
+                                        <small id="preview-message">
+                                            <i class="ace-icon fa"></i>
+                                            Drag & drop file upload with image preview
+                                        </small>
+                                    </a>
+                                </h4>
+                            </div>
+
+                            <div class="panel-collapse collapse" id="collapseOne">
+                                <div class="panel-body">
+                                    <form class="dropzone well"
+                                          id="drop-zone" enctype="multipart/form-data"
+                                          style="border-radius: 10px;">
+                                        <div class="fallback">
+                                            <input name="file" type="file" multiple=""/>
+                                        </div>
+                                    </form>
+
+                                    <div id="preview-template" class="hide">
+                                        <div class="dz-preview dz-file-preview">
+                                            <div class="dz-image">
+                                                <img data-dz-thumbnail=""/>
+                                            </div>
+                                            <div class="dz-details">
+                                                <div class="dz-size">
+                                                    <span data-dz-size=""></span>
+                                                </div>
+
+                                                <div class="dz-filename">
+                                                    <span data-dz-name=""></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="dz-progress">
+                                                <span class="dz-upload" data-dz-uploadprogress=""></span>
+                                            </div>
+
+                                            <div class="dz-error-message">
+                                                <span data-dz-errormessage=""></span>
+                                            </div>
+
+                                            <div class="dz-success-mark">
+											<span class="fa-stack fa-lg bigger-150">
+												<i class="fa fa-circle fa-stack-2x white"></i>
+
+												<i class="fa fa-check fa-stack-1x fa-inverse green"></i>
+											</span>
+                                            </div>
+
+                                            <div class="dz-error-mark">
+											<span class="fa-stack fa-lg bigger-150">
+												<i class="fa fa-circle fa-stack-2x white"></i>
+												<i class="fa fa-remove fa-stack-1x fa-inverse red"></i>
+											</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <div>
+                            <ul class="ace-thumbnails clearfix" id="imageDiv">
+
+
+                            </ul>
+                        </div><!-- PAGE CONTENT ENDS -->
+
+                        <!-- PAGE CONTENT ENDS -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+        </div>
+    </div><!-- /.main-content -->
+
+    <div class="footer" th:include="templates/ace/pb-pages/footer :: footer">
+    </div>
+
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"
+       th:include="templates/ace/pb-pages/btn-scroll-up :: btn-scroll-up">
+    </a>
+</div><!-- /.main-container -->
+
+
+<div th:include="templates/ace/pb-pages/common-script :: common-script"></div>
+<!-- page specific plugin scripts -->
+<!--<script th:src="@{/assets/js/dropzone.min.js}"></script>-->
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css"/>
+<script th:src="@{/assets/js/jquery.colorbox.min.js}"></script>
+
+<!--lozyload-->
+<script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.min.js" charset="UTF-8"></script>
+
+
+<script type="text/javascript">
+    let count = 0;
+    jQuery(function ($) {
+        Dropzone.options.dropZone = {
+            url: "image/uploads.html",
+
+            previewTemplate: $('#preview-template').html(),
+            paramName: "files", // 提交的参数,默认为file
+            thumbnailHeight: 120,
+            thumbnailWidth: 120,
+            maxFilesize: 10,
+            //maxFiles: 150, //限制每次上传文件量
+            addRemoveLinks: true,
+            dictRemoveFile: '<i class="ace-icon glyphicon glyphicon-trash"></i>',
+            dictCancelUpload: 'cancel',
+            acceptedFiles: ".jpg,.gif,.png,.jpeg", // 上传的类型
+            parallelUploads: 3,
+            dictFileTooBig: "可添加的最大文件大小为{{maxFilesize}}Mb，当前文件大小为{{filesize}}Mb ",
+            //uploadMultiple: true,
+            // clickable: true, //若果设置 true, localDropzone 元素本身将可以点击
+            dictDefaultMessage: //框内文本内容
+                '<span class="bigger-150 bolder"><i class="ace-icon fa fa-caret-right red"></i> Drop files</span> to upload \
+                 <span class="smaller-80 grey">(or click)</span><br/> \
+                 <i class="upload-icon ace-icon fa fa-cloud-upload blue fa-3x"></i>',
+            //autoProcessQueue: true,
+            /*renameFile: function (file) {
+                const dt = new Date();
+                const time = dt.getTime();
+                return time + file.name;
+            },*/
+
+            init: function () {
+                const myDropzone = this;
+                /*const submitButton = document.querySelector("#act-on-upload");
+                //为上传按钮添加点击事件
+                submitButton.addEventListener("click", function () {
+                    //配合autoProcessQueue: false
+                    $('#subModel').modal('hide');
+                    //手动上传
+                    myDropzone.processQueue();
+                });*/
+
+                this.on("addedfile", function (file) {
+                    //alert("addedfile fileName:  " + file.name + "uuid:  " + file.upload.uuid)
+                    //上传文件时触发的事件
+                });
+                this.on("sending", function (file, xhr, formData) {
+                    formData.append("uuid", file.upload.uuid);
+                });
+                this.on("success", function (file, data) {
+                    //上传成功触发的事件
+                    //上传完成后, 再压缩图片
+                    $.ajax({
+                        type: "get", // 以get方式发起请求
+                        url: "image/compress/" + file.upload.uuid,
+                        dataType: "json",
+                        // 将你的请求参数以问号拼接到url中进行参数传递
+                        success(data) {
+                            count = count + 1;
+                            $("#preview-message").html(`${count} completed !!!`)
+                            console.log('compress');
+                        },
+                        error(data) {
+                            window.location.href = '500.html';
+                        }
+                    })
+                });
+                this.on("error", function (file, data) {
+                    //上传失败触发的事件
+                    console.log('fail');
+                    let message = '';
+                    //lavarel框架有一个表单验证，
+                    //对于ajax请求，JSON 响应会发送一个 422 HTTP 状态码，
+                    //对应file.accepted的值是false，在这里捕捉表单验证的错误提示
+                    if (file.accepted) {
+                        $.each(data, function (key, val) {
+                            message = message + val[0] + ';';
+                        })
+                        //控制器层面的错误提示，file.accepted = true的时候；
+                        alert(message);
+                    }
+                });
+                this.on("removedfile", function (file) {
+                    const ext = file.name.split('.')[1];
+                    $.ajax({
+                        type: "get", // 以get方式发起请求
+                        url: "image/remove/" + file.upload.uuid,
+                        dataType: "json",
+                        // 将你的请求参数以问号拼接到url中进行参数传递
+                        success(data) {
+                        },
+                        error(data) {
+                        }
+                    })
+                });
+            },
+            //文件信息预览
+            thumbnail: function (file, dataUrl) {
+                if (file.previewElement) {
+                    $(file.previewElement).removeClass("dz-file-preview");
+                    const images = $(file.previewElement).find("[data-dz-thumbnail]").each(function () {
+                        const thumbnailElement = this;
+                        thumbnailElement.alt = file.name;
+                        thumbnailElement.src = dataUrl;
+                        //set default thumbnail for non image file
+                        //  thumbnailElement.src = "media/get/videoIcon.png";
+
+                    });
+                    setTimeout(function () {
+                        $(file.previewElement).addClass("dz-image-preview");
+                    }, 1);
+                }
+            },
+        }
+        loadingImage();
+        initColorbox();
+    });
+
+    //----------------------------------------------------------------------------------------------------------------------
+    //图片查询中正对浏览器主页面滚动事件处理(瀑布流)。只能使用window方式绑定，使用document方式不起作用
+    $(window).on('scroll', function () {
+        if (scrollTop() + windowHeight() >= (documentHeight() - 50/*滚动响应区域高度取50px*/)) {
+            appendImageLi();
+        }
+    });
+
+
+    function appendImageLi() {
+        //scroll到底加载
+        if (scrollDown()) {
+            appendImages();
+            initColorbox();
+        }
+    }
+
+    //在上传过程中, browser高度会变, 从而令到paging的值有误差, 可以用分页解决问题
+    let paging = 0;
+
+    function appendImages() {
+        paging = paging + 1;
+        $.ajax({
+            type: "get", // 以get方式发起请求
+            url: "getImagesByLimit.html/" + paging,
+            dataType: "json",
+            // 将你的请求参数以问号拼接到url中进行参数传递
+            success(data) {
+                let html = "";
+                for (let i = 0; i < data.length; i++) {
+                    const fileName = data[i].fileName;
+                    const ext = data[i].ext;
+                    let toolsClass = "tools tools-bottom";
+                    let side = 250;
+                    if (isMobile()) {
+                        toolsClass = "tools tools-bottom in";
+                        side = 100;
+                    }
+
+                    html = html + `<li id="li-${fileName}" class="lazy">
+                                        <a href="image/get/${fileName}${ext}" data-rel="colorbox" class="cboxElement">
+                                            <img width="${side}" height="${side}" alt="150x150" src="image/get/${fileName}" id="img-${fileName}">
+                                        </a>
+                                        <div class="${toolsClass}">
+                                            <a href="javascript:void(0);" id="rotate-l-${fileName}" class="rotate">
+                                                <i class="ace-icon fa fa-undo"></i>
+                                            </a>
+                                            <a href="javascript:void(0);" id="rotate-r-${fileName}" class="rotate">
+                                                <i class="ace-icon fa fa-repeat"></i>
+                                            </a>
+                                            <a href="image/download/${fileName}" id="download-${fileName}" class="imageDownload">
+                                                <i class="ace-icon fa fa-download green"></i>
+                                            </a>
+                                            <a href="javascript:void(0);" id="delete-${fileName}" class="imageDelete">
+                                                <i class="ace-icon fa fa-times red"></i>
+                                            </a>
+                                        </div>
+                                    </li>`;
+                }
+                $("#imageDiv").append(html);
+                initColorbox();
+                // data为返回值
+                // 成功后的回调方法
+            },
+            error(data) {
+                window.location.href = '500.html';
+            }
+        })
+    }
+
+    //----------------------------------------------------------------------------------------------------------------------
+
+
+    //collapse触发
+    $("a.accordion-toggle").bind("click", function () {
+        if (paging !== 0) {
+            paging = 0;
+        }
+        loadingImage();
+    });
+
+    //colorbox jq
+    function initColorbox() {
+        let $overflow = '';
+        const colorbox_params = {
+            rel: 'colorbox',
+            reposition: true,
+            scalePhotos: true,
+            scrolling: false,
+            previous: '<i class="ace-icon fa fa-arrow-left"></i>',
+            next: '<i class="ace-icon fa fa-arrow-right"></i>',
+            close: '&times;',
+            current: '{current} of {total}',
+            maxWidth: '100%',
+            maxHeight: '100%',
+            onOpen: function () {
+                $overflow = document.body.style.overflow;
+                document.body.style.overflow = 'hidden';
+            },
+            onClosed: function () {
+                document.body.style.overflow = $overflow;
+            },
+            onComplete: function () {
+                $.colorbox.resize();
+            }
+        };
+        $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
+        $("#cboxLoadingGraphic").html("<i class='ace-icon fa fa-spinner orange fa-spin'></i>");//let's add a custom loading icon
+        $(document).one('ajaxloadstart.page', function (e) {
+            $('#colorbox, #cboxOverlay').remove();
+        });
+    }
+
+    //加载图片
+    function loadingImage() {
+        const loadingDialog = dialog({
+            title: 'Loading ...',
+            content: $("#loading_img").html(),
+            cancel: false,
+        });
+        loadingDialog.showModal();
+
+        $.ajax({
+            type: "get", // 以get方式发起请求
+            url: "getImagesByLimit.html/" + paging,
+            dataType: "json",
+            // 将你的请求参数以问号拼接到url中进行参数传递
+            success(data) {
+                let html = "";
+                for (let i = 0; i < data.length; i++) {
+                    const fileName = data[i].fileName;
+                    const ext = data[i].ext;
+                    let toolsClass = "tools tools-bottom";
+                    let side = 250;
+                    if (isMobile()) {
+                        toolsClass = "tools tools-bottom in";
+                        side = 100;
+                    }
+
+                    html = html + `<li id="li-${fileName}" class="lazy">
+                                        <a href="image/get/${fileName}${ext}" data-rel="colorbox" class="cboxElement">
+                                            <img width="${side}" height="${side}" alt="150x150" src="image/get/${fileName}" id="img-${fileName}">
+                                        </a>
+                                        <div class="${toolsClass}">
+                                            <a href="javascript:void(0);" id="rotate-l-${fileName}" class="rotate">
+                                                <i class="ace-icon fa fa-undo"></i>
+                                            </a>
+                                            <a href="javascript:void(0);" id="rotate-r-${fileName}" class="rotate">
+                                                <i class="ace-icon fa fa-repeat"></i>
+                                            </a>
+                                            <a href="image/download/${fileName}" id="download-${fileName}" class="imageDownload">
+                                                <i class="ace-icon fa fa-download green"></i>
+                                            </a>
+                                            <a href="javascript:void(0);" id="delete-${fileName}" class="imageDelete">
+                                                <i class="ace-icon fa fa-times red"></i>
+                                            </a>
+                                        </div>
+                                    </li>`;
+                }
+                $("#imageDiv").html(html);
+                initColorbox();
+                loadingDialog.close().remove();
+                // data为返回值
+                // 成功后的回调方法
+            },
+            error(data) {
+                window.location.href = '500.html';
+            }
+        })
+    }
+
+    let $body = $('body');
+
+    /* $(document).on('click', '.imageDelete', function(){
+         alert(this.id)
+         // 事件处理函数
+     });*/
+
+    $body.on('click', '.rotate', function () {
+        const idl = $(this).attr('id').split("rotate-l-")[1];
+        const idr = $(this).attr('id').split("rotate-r-")[1];
+
+        let imgId;
+        let rotateURL;
+        if (typeof (idl) == "undefined") {
+            rotateURL = "image/rotate/right/" + idr;
+            imgId = idr;
+        } else {
+            rotateURL = "image/rotate/left/" + idl;
+            imgId = idl;
+        }
+
+        $.ajax({
+            type: "get", // 以get方式发起请求
+            url: rotateURL,
+            dataType: "json",
+            // 将你的请求参数以问号拼接到url中进行参数传递
+            success(data) {
+                const fileName = data.fileName;
+                const ext = data.ext;
+                let toolsClass = "tools tools-bottom";
+                let side = 250;
+                if (isMobile()) {
+                    toolsClass = "tools tools-bottom in";
+                    side = 100;
+                }
+
+                let html = "";
+                html = html + `<li id="li-${fileName}" class="lazy">
+                                    <a href="image/get/${fileName}${ext}" data-rel="colorbox" class="cboxElement">
+                                        <img width="${side}" height="${side}" alt="150x150"  src="image/get/${fileName}" id="img-${fileName}">
+                                    </a>
+                                    <div class="${toolsClass}">
+                                        <a href="javascript:void(0);" id="rotate-l-${fileName}" class="rotate">
+                                            <i class="ace-icon fa fa-undo"></i>
+                                        </a>
+                                        <a href="javascript:void(0);" id="rotate-r-${fileName}" class="rotate">
+                                            <i class="ace-icon fa fa-repeat"></i>
+                                        </a>
+                                        <a href="image/download/${fileName}" id="download-${fileName}" class="imageDownload">
+                                            <i class="ace-icon fa fa-download green"></i>
+                                        </a>
+                                        <a href="javascript:void(0);" id="delete-${fileName}" class="imageDelete">
+                                            <i class="ace-icon fa fa-times red"></i>
+                                        </a>
+                                    </div>
+                                </li>`;
+                $("#li-" + imgId + "").replaceWith(html);
+                initColorbox();
+            },
+            error(data) {
+                window.location.href = '500.html';
+            },
+        })
+
+    });
+
+    $body.on('click', '.imageDelete', function () {
+        let id = $(this).attr('id');
+        let imageId = id.split("delete-")[1];
+        $.ajax({
+            type: "get", // 以get方式发起请求
+            url: "image/delete/" + imageId,
+            dataType: "json",
+            // 将你的请求参数以问号拼接到url中进行参数传递
+            success(data) {
+                $("#li-" + imageId + "").css('display', 'none');
+                //  $(this).parent().parent().hide();
+            },
+            error(data) {
+                window.location.href = '500.html';
+            },
+        })
+    });
+
+    $("#delete-all").on('click', function () {
+        const d = dialog({
+            title: 'Delete ALL photos.',
+            content: 'Are you sure delete ALL photos ?',
+            okValue: 'OK',
+            ok: function () {
+                this.title('Submit…');
+                $.ajax({
+                    type: "get",
+                    url: "image/delete/all",
+                    dataType: "json",
+                    // 将你的请求参数以问号拼接到url中进行参数传递
+                    success(data) {
+                        $("#imageDiv").html('');
+                        d.close().remove();
+                    },
+                    error(data) {
+                        window.location.href = '500.html';
+                    },
+
+                })
+                return true;
+                // return false; dialog 不会消失
+            },
+            cancelValue: 'Cancel',
+            cancel: function () {
+            }
+        });
+        d.showModal();
+    });
+</script>
+
+</body>
+</html>
