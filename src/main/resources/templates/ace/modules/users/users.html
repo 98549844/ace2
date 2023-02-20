@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="ace/pb-pages/header :: header">
+    <!-- inline styles related to this page -->
+</head>
+
+<body class="no-skin">
+<div id="navbar" class="navbar navbar-default ace-save-state"
+     th:include="ace/pb-pages/navbar :: navbar"></div>
+
+<div class="main-container ace-save-state" id="main-container">
+    <script type="text/javascript">
+        try {
+            ace.settings.loadState('main-container')
+        } catch (e) {
+        }
+    </script>
+
+    <div id="sidebar" class="sidebar responsive ace-save-state"
+         th:include="ace/pb-pages/sidebar :: sidebar">
+    </div>
+
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs" th:include="ace/pb-pages/breadcrumbs :: breadcrumbs"></div>
+            <div class="page-content">
+                <div class="ace-settings-container" id="ace-settings-container"
+                     th:include="ace/pb-pages/ace-settings-container :: ace-settings-container">
+                </div><!-- /.ace-settings-container -->
+
+                <div class="page-header">
+                    <h1>
+                        Users
+                        <small>
+                            <i class="ace-icon fa fa-angle-double-right"></i>
+                            User list
+                        </small>
+                    </h1>
+                </div><!-- /.page-header -->
+
+                <div class="col-xs-12 col-sm-3">
+                    <div class="search-area well well-sm">
+                        <form action="/ace/users/search.html" method="get">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-11 col-md-10">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="username"
+                                               placeholder="Search user"/>
+                                        <div class="input-group-btn">
+                                            <button type="submit" class="btn btn-default no-border btn-sm">
+                                                <i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <table id="simple-table" class="table  table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th class="detail-col">Details</th>
+                                        <th>Account</th>
+                                        <th>User Name</th>
+                                        <th class="hidden-480">Account Status</th>
+                                        <th class="hidden-480">Roles</th>
+                                        <th>
+                                            <i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>
+                                            Login Time
+                                        </th>
+                                        <th class="hidden-480">Expire Date</th>
+                                        <th class="hidden-480">Operation</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    <div th:each="rowUser:${users}">
+                                        <tr th:id="'trBase-'+${rowUser.userId}">
+                                            <td class="center">
+                                                <div class="action-buttons">
+                                                    <a href="#" class="green bigger-140 show-details-btn"
+                                                       title="Show Details">
+                                                        <i class="ace-icon fa fa-angle-double-down"></i>
+                                                        <span class="sr-only">Details</span>
+                                                    </a>
+                                                </div>
+                                            </td>
+
+                                            <input type="hidden" th:value="${rowUser.userId}" th:id="${rowUser.userId}"
+                                                   class="input-hidden"/>
+                                            <td th:text="${rowUser.userAccount}"></td>
+                                            <td th:text="${rowUser.Username}"></td>
+
+                                            <td th:if="${rowUser.enabled}">
+                                                <span th:id="'enable-'+${rowUser.userId}">
+                                                    <strong class="green">Enable</strong></span>
+                                                <input th:id="'check-'+${rowUser.userId}" checked=""
+                                                       th:checked="${rowUser.enabled}"
+                                                       th:if="${rowUser.userId} ne ${currentUser.userId}"
+                                                       type="checkbox"
+                                                       class="ace ace-switch ace-switch-5 "/>
+                                                <span class="lbl middle"></span>
+                                            </td>
+
+                                            <td th:if="${not rowUser.enabled}">
+                                                <span th:id="'enable-'+${rowUser.userId}">
+                                                    <strong class="red">Disable</strong></span>
+                                                <input th:id="'check-'+${rowUser.userId}" checked=""
+                                                       th:checked="${rowUser.enabled}"
+                                                       th:if="${rowUser.userId} ne ${currentUser.userId}"
+                                                       type="checkbox"
+                                                       class="ace ace-switch ace-switch-5 "/>
+                                                <span class="lbl middle"></span>
+                                            </td>
+
+                                            <td th:id="'userId-'+${rowUser.userId}" class="userRoles"></td>
+
+                                            <td th:text="${#temporals.format(rowUser.loginDateTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                            <!-- 原文 <td th:text="${#temporals.format(rowUser.expireDate, 'yyyy-MM-dd HH:mm:ss')}"></td>-->
+
+                                            <!--<td th:id="'expireDate-'+${rowUser.userId}" th:text="${#temporals.format(rowUser.expireDate, 'yyyy-MM-dd HH:mm:ss')}"></td>-->
+                                            <td th:id="'expireDate-'+${rowUser.userId}">
+                                                <div class="profile-info-value">
+                                                    <span class="editable expireDate"
+                                                          th:id="'updateExpire-'+${rowUser.userId}" th:text="${#temporals.format(rowUser.expireDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="hidden-sm hidden-xs btn-group">
+                                                    <button class="btn btn-xs btn-success">
+                                                        <i class="ace-icon fa fa-check bigger-120"></i>
+                                                    </button>
+
+                                                    <button class="btn btn-xs btn-info">
+                                                        <a th:href="@{'/ace/users/profile.html/'+${rowUser.userId}}">
+                                                            <i class="ace-icon fa fa-pencil bigger-120 white"></i>
+                                                        </a>
+                                                    </button>
+
+                                                    <button th:if="${rowUser.userAccount} ne ${currentUser.userAccount}"
+                                                            class="btn btn-xs btn-danger delete-user"
+                                                            th:id="'btnDanger-'+${rowUser.userId}">
+                                                        <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                                                    </button>
+
+                                                    <button class="btn btn-xs btn-warning">
+                                                        <i class="ace-icon fa fa-flag bigger-120"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="detail-row" th:id="'trDetail-'+${rowUser.userId}">
+                                            <td colspan="8">
+                                                <div class="table-detail">
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-2">
+                                                            <div class="text-center">
+                                                                <img height="150"
+                                                                     class="thumbnail inline no-margin-bottom"
+                                                                     alt="Domain Owner's Avatar"
+                                                                     th:src="@{/assets/images/avatars/profile-pic.jpg}"/>
+                                                                <br/>
+                                                                <div class="width-80 label label-info label-xlg arrowed-in arrowed-in-right">
+                                                                    <div class="inline position-relative">
+                                                                        <a class="user-title-label" href="#">
+                                                                            <i class="ace-icon fa fa-circle light-green"></i>
+                                                                            <span class="white"
+                                                                                  th:text="${rowUser.Username}"></span>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-12 col-sm-7">
+                                                            <div class="space visible-xs"></div>
+
+                                                            <div class="profile-user-info profile-user-info-striped">
+                                                                <div class="profile-info-row">
+                                                                    <div class="profile-info-name"> Username</div>
+
+                                                                    <div class="profile-info-value">
+                                                                        <span th:text="${rowUser.Username}"></span>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="profile-info-row">
+                                                                    <div class="profile-info-name"> Location</div>
+
+                                                                    <div class="profile-info-value">
+                                                                        <i class="fa fa-map-marker light-orange bigger-110"></i>
+                                                                        <span th:text="${rowUser.ip}"></span>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="profile-info-row">
+                                                                    <div class="profile-info-name"> Age</div>
+                                                                    <div class="profile-info-value">
+                                                                        <span th:text="${rowUser.age}"></span>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="profile-info-row">
+                                                                    <div class="profile-info-name"> Joined</div>
+
+                                                                    <div class="profile-info-value">
+                                                                        <span th:text="${#temporals.format(rowUser.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="profile-info-row">
+                                                                    <div class="profile-info-name"> Last Online
+                                                                    </div>
+
+                                                                    <div class="profile-info-value">
+                                                                        <span th:text="${#temporals.format(rowUser.loginDateTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="profile-info-row">
+                                                                    <div class="profile-info-name"> About Me</div>
+
+                                                                    <div class="profile-info-value">
+                                                                        <span th:text="${rowUser.description}"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-12 col-sm-3">
+                                                            <div class="space visible-xs"></div>
+                                                            <h4 class="header blue lighter less-margin">Send a
+                                                                message
+                                                                to
+                                                                [(${rowUser.username})]</h4>
+
+                                                            <div class="space-6"></div>
+
+                                                            <form>
+                                                                <fieldset>
+                                                                <textarea class="width-100" resize="none"
+                                                                          placeholder="Type something…"></textarea>
+                                                                </fieldset>
+
+                                                                <div class="hr hr-dotted"></div>
+
+                                                                <div class="clearfix">
+                                                                    <label class="pull-left">
+                                                                        <input type="checkbox" class="ace"/>
+                                                                        <span class="lbl"> Email me a copy</span>
+                                                                    </label>
+
+                                                                    <button class="pull-right btn btn-sm btn-primary btn-white btn-round"
+                                                                            type="button">
+                                                                        Submit
+                                                                        <i class="ace-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </div>
+                                    </tbody>
+                                </table>
+                            </div><!-- /.span -->
+                        </div><!-- /.row -->
+                        <!-- PAGE CONTENT ENDS -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+        </div>
+    </div><!-- /.main-content -->
+
+    <div class="footer" th:include="ace/pb-pages/footer :: footer">
+    </div>
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"
+       th:include="ace/pb-pages/btn-scroll-up :: btn-scroll-up">
+    </a>
+</div><!-- /.main-container -->
+
+<div th:include="ace/pb-pages/common-script :: common-script"></div>
+<!-- page specific plugin scripts -->
+
+
+<!-- inline scripts related to this page -->
+
+
+<script type="text/javascript">
+
+    jQuery(function ($) {
+        /***************/
+        $('.show-details-btn').on('click', function (e) {
+            e.preventDefault();
+            $(this).closest('tr').next().toggleClass('open');
+            $(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
+        });
+        /***************/
+
+        //delete user account
+        $("button.btn-danger").on('click', function (e) {
+            const btnDangerId = $(this).attr("id");
+            const userId = btnDangerId.split("-");
+            const d = dialog({
+                title: 'Delete User',
+                content: 'Are you sure to delete this user ?',
+                okValue: 'OK',
+                ok: function () {
+                    this.title('Submit…');
+                    $.ajax({
+                        type: "get", // 以get方式发起请求
+                        url: `delete.html/${userId[1]}`,
+                        dataType: "json",
+                        // 将你的请求参数以问号拼接到url中进行参数传递
+                        success(data) {
+                            $("#trBase-" + userId[1]).remove();
+                            $("#trDetail-" + userId[1]).remove();
+                        },
+                        error(data) {
+                            window.location.href = '500.html';
+                        }
+                    })
+                    return true;
+                    // return false; dialog 不会消失
+                },
+                cancelValue: 'Cancel',
+                cancel: function () {
+                }
+            });
+            d.showModal();
+        });
+
+        /***************/
+        //set account enable/disable
+        $(":checkbox").on('click', function (e) {
+            const checkId = $(this).attr("id");
+            const userId = checkId.split("-");
+            $.ajax(
+                {
+                    type: "GET",
+                    url: "/ace/users/enable.html",
+                    data: {userId: userId[1]},
+                    cache: false,
+                    success: function (ajaxResult) {
+                        $("#enable-" + userId[1]).html(ajaxResult);
+                    },
+                    error: function () {
+                        alert("AJAX FAILURE");
+                    }
+                }
+            )
+        });
+        /***************/
+        $.each($("input.input-hidden"), function () {
+            const userId = $(this).attr('id');
+            //  console.log($(this).attr("type"));
+            $.ajax({
+                type: "get", // 以get方式发起请求
+                // url: "/ace/roles/getByUserId/",
+                url: `/ace/roles/getByUserId/${userId}`,
+                dataType: "json",
+                // 将你的请求参数以问号拼接到url中进行参数传递
+                success(data) {
+                    let text = "";
+                    for (let i = 0; i < data.length; i++) {
+                        text = data[i].roleCode + " ";
+                        //如果user已经在disable组, hidden enable button
+                        /*if ('DISABLE' === data[i].roleCode) {
+                            $("#check-"+userId).remove();
+                        }*/
+                    }
+                    $("#userId-" + userId).text(text);
+                },
+                error(data) {
+                    window.location.href = '500.html';
+                },
+            });
+        });
+    });
+
+    //custom date editable
+    //https://getdatepicker.com/4/#bootstrap-3-datepicker-v4-docs
+    //https://blog.csdn.net/kouzuhuai2956/article/details/119379576
+    $('.editable.expireDate').editable({
+        type: 'adate',
+        date: {
+
+            //datepicker plugin options
+            format: 'yyyy-mm-dd',
+            viewformat: 'yyyy-mm-dd',
+            weekStart: 1
+
+            //,nativeUI: true//if true and browser support input[type=date], native browser control will be used
+            //,format: 'yyyy-mm-dd',
+            //viewformat: 'yyyy-mm-dd'
+        }
+    })
+
+</script>
+
+</body>
+</html>

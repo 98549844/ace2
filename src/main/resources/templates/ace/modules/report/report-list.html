@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="ace/pb-pages/header :: header">
+    <!-- inline styles related to this page -->
+</head>
+
+<body class="no-skin">
+<div id="navbar" class="navbar navbar-default ace-save-state"
+     th:include="ace/pb-pages/navbar :: navbar"></div>
+
+<div class="main-container ace-save-state" id="main-container">
+    <script type="text/javascript">
+        try {
+            ace.settings.loadState('main-container')
+        } catch (e) {
+        }
+    </script>
+
+    <div id="sidebar" class="sidebar responsive ace-save-state"
+         th:include="ace/pb-pages/sidebar :: sidebar">
+    </div>
+
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs" th:include="ace/pb-pages/breadcrumbs :: breadcrumbs"></div>
+            <div class="page-content">
+                <div class="ace-settings-container" id="ace-settings-container"
+                     th:include="ace/pb-pages/ace-settings-container :: ace-settings-container">
+                </div><!-- /.ace-settings-container -->
+
+                <div class="page-header">
+                    <h1>
+                        Issue Report
+                        <small>
+                            <i class="ace-icon fa fa-angle-double-right"></i>
+                            List
+                        </small>
+                    </h1>
+                </div><!-- /.page-header -->
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <a th:href="@{/ace/report/newIssue.html}">
+                            <button class="btn btn-success">New Issue</button>
+                        </a>
+                        <p><b class="arrow"></b></p>
+
+                        <div class="col-xs-12">
+                            <table id="simple-table" class="table  table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th class="detail-col">Level</th>
+                                    <th class="hidden-480">Subject</th>
+                                    <th class="hidden-480">Status</th>
+                                    <th><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>Last Date</th>
+                                    <th>Reporter</th>
+                                    <th><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>Report Date</th>
+                                    <th class="hidden-480">Operation</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <div th:each="rowReport:${reports}">
+                                    <tr th:id="'tr-'+${rowReport.reportId}">
+                                        <input type="hidden" th:value="${rowReport.reportId}"
+                                               th:id="${rowReport.reportId}" class="input-hidden"/>
+                                        <td th:text="${rowReport.level}"></td>
+                                        <td th:text="${rowReport.title}"></td>
+                                        <td th:text="${rowReport.status}"></td>
+                                        <td th:text="${#temporals.format(rowReport.lastUpdateDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                        <td th:text="${rowReport.reporter}"></td>
+                                        <td th:text="${#temporals.format(rowReport.reportDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+
+                                        <td>
+                                            <div class="hidden-sm hidden-xs btn-group">
+                                                <button class="btn btn-xs btn-success">
+                                                    <i class="ace-icon fa fa-check bigger-120"></i>
+                                                </button>
+
+                                                <button class="btn btn-xs btn-info">
+                                                    <i class="ace-icon fa fa-pencil bigger-120 white"></i>
+                                                </button>
+
+                                                <button class="btn btn-xs btn-danger delete-user"
+                                                        th:id="'delete-'+${rowReport.reportId}">
+                                                    <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                                                </button>
+
+                                                <button class="btn btn-xs btn-warning">
+                                                    <i class="ace-icon fa fa-flag bigger-120"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </div>
+                                </tbody>
+                            </table>
+                        </div><!-- /.span -->
+
+
+                        <!-- PAGE CONTENT ENDS -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+        </div>
+    </div><!-- /.main-content -->
+
+    <div class="footer" th:include="ace/pb-pages/footer :: footer">
+    </div>
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"
+       th:include="ace/pb-pages/btn-scroll-up :: btn-scroll-up">
+    </a>
+</div><!-- /.main-container -->
+
+<div th:include="ace/pb-pages/common-script :: common-script"></div>
+<!-- page specific plugin scripts -->
+
+<script>
+
+
+    $(".btn.btn-xs.btn-danger.delete-user").on("click", function () {
+        let id = $(this).attr('id');
+        let reportId = id.split("delete-")[1];
+
+
+        d = dialog({
+            title: 'Delete issue report',
+            content: 'Are you confirm to delete issue report !!!',
+            okValue: 'Confirm',
+            ok: function () {
+                this.title('Deleting …');
+                $.ajax({
+                    type: "get", // 以get方式发起请求
+                    url: `delete.html/${reportId}`,
+                    success(data) {
+                        $(`#tr-${reportId}`).remove();
+                    }
+                })
+                return true;
+            },
+            cancelValue: 'Cancel',
+            cancel: function () {
+            }
+        });
+        d.showModal();
+
+
+    });
+
+
+</script>
+
+</body>
+</html>

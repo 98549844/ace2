@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="ace/pb-pages/header :: header">
+    <!-- inline styles related to this page -->
+</head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<style>
+    .mdeContainer {
+        display: inline-block;
+        width: 95%;
+        vertical-align: top;
+    }
+</style>
+
+<body class="no-skin">
+<div id="navbar" class="navbar navbar-default ace-save-state"
+     th:include="ace/pb-pages/navbar :: navbar"></div>
+
+<div class="main-container ace-save-state" id="main-container">
+    <script type="text/javascript">
+        try {
+            ace.settings.loadState('main-container')
+        } catch (e) {
+        }
+    </script>
+
+    <div id="sidebar" class="sidebar responsive ace-save-state"
+         th:include="ace/pb-pages/sidebar :: sidebar">
+    </div>
+
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs" th:include="ace/pb-pages/breadcrumbs :: breadcrumbs"></div>
+            <div class="page-content">
+                <div class="ace-settings-container" id="ace-settings-container"
+                     th:include="ace/pb-pages/ace-settings-container :: ace-settings-container">
+                </div><!-- /.ace-settings-container -->
+
+                <div class="page-header">
+                    <h1>
+                        <a th:href="@{/ace/report/list.html}">Issue Report</a>
+                        <small>
+                            <i class="ace-icon fa fa-angle-double-right"></i>
+                            New Issue
+                        </small>
+                    </h1>
+                </div><!-- /.page-header -->
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+
+                        <h4 class="widget-title lighter"><b>Mark Down Editor</b></h4>
+                        <div class="widget-body">
+                            <div class="widget-main">
+                                <div id="fuelux-wizard-container mdeContainer">
+                                    <label for="editor"></label><textarea id="editor"> </textarea>
+                                </div>
+                                <div class="wizard-actions">
+                                    <button class="btn btn-success btn-next" id="commit">
+                                        Commit
+                                        <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                                    </button>
+                                </div>
+                            </div><!-- /.widget-main -->
+                        </div><!-- /.widget-body -->
+
+
+                        <!-- PAGE CONTENT ENDS -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+        </div>
+    </div><!-- /.main-content -->
+
+    <div class="footer" th:include="ace/pb-pages/footer :: footer">
+    </div>
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"
+       th:include="ace/pb-pages/btn-scroll-up :: btn-scroll-up">
+    </a>
+</div><!-- /.main-container -->
+
+<div th:include="ace/pb-pages/common-script :: common-script"></div>
+<!-- page specific plugin scripts -->
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+
+
+<script>
+
+    const editMde = new SimpleMDE({
+        element: document.getElementById('editor'),
+        autofocus: true,
+        toolbar: ["bold", "italic", "heading", "strikethrough", "|",
+            "quote", "unordered-list", "ordered-list", "|",
+            "link", "image", "table", "code", "|",
+            "horizontal-rule", "fullscreen", "preview"
+        ],
+        // initialValue: '## Stuff.... ', //初始值
+        //  hideIcons: ['guide', 'fullscreen', 'side-by-side'] 隐藏icon
+        // guide implmentation is open to you
+        // fullscreen and sxs muss up layout
+    });
+    //  editMde.value('# Sample Markdown\n- one\n- two\n- three');
+
+    $("#commit").on("click", function () {
+        alert(editMde.value());
+    });
+
+    /* document.addEventListener('paste', (event) => {
+        console.log('粘贴事件', event)
+    });*/
+
+</script>
+
+</body>
+</html>

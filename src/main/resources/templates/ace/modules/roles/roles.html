@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="ace/pb-pages/header :: header">
+    <!-- inline styles related to this page -->
+</head>
+
+<body class="no-skin">
+<div id="navbar" class="navbar navbar-default ace-save-state"
+     th:include="ace/pb-pages/navbar :: navbar"></div>
+
+<div class="main-container ace-save-state" id="main-container">
+    <script type="text/javascript">
+        try {
+            ace.settings.loadState('main-container')
+        } catch (e) {
+        }
+    </script>
+
+    <div id="sidebar" class="sidebar responsive ace-save-state"
+         th:include="ace/pb-pages/sidebar :: sidebar">
+    </div>
+
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs" th:include="ace/pb-pages/breadcrumbs :: breadcrumbs"></div>
+            <div class="page-content">
+                <div class="ace-settings-container" id="ace-settings-container"
+                     th:include="ace/pb-pages/ace-settings-container :: ace-settings-container">
+                </div><!-- /.ace-settings-container -->
+
+                <div class="page-header">
+                    <h1>
+                        Roles
+                        <small>
+                            <i class="ace-icon fa fa-angle-double-right"></i>
+                            Role list
+                        </small>
+                    </h1>
+                </div><!-- /.page-header -->
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <table id="simple-table" class="table  table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>Role description</th>
+                                <th>Role code</th>
+                                <th>Permission code</th>
+                                <th>Action</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr th:each="rowRole:${roles}">
+                                <td th:text="${rowRole.roleName}"></td>
+                                <td th:text="${rowRole.roleCode}"></td>
+                                <td th:text="PC"></td>
+                                <td th:text="AC"></td>
+                                <td>
+                                    <div class="hidden-sm hidden-xs btn-group">
+                                        <button class="btn btn-xs btn-success">
+                                            <i class="ace-icon fa fa-check bigger-120"></i>
+                                        </button>
+
+                                        <button class="btn btn-xs btn-info" th:id="'btnInfo-'+${rowRole.roleId}">
+                                            <i class="ace-icon fa fa-pencil bigger-120"></i>
+                                        </button>
+
+                                        <button class="btn btn-xs btn-danger"
+                                                th:id="'btnDanger-'+${rowRole.roleId}">
+                                            <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                                        </button>
+
+                                        <button class="btn btn-xs btn-warning">
+                                            <i class="ace-icon fa fa-flag bigger-120"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="hr hr-24"></div>
+                        <div class="col-xs-5">
+                            <div id="widgetBox" class="widget-box collapsed">
+                                <div class="widget-header">
+                                    <h4 class="widget-title glyphicon-plus"> Create New Role</h4>
+
+                                    <div class="widget-toolbar">
+                                        <a href="#" data-action="collapse">
+                                            <i id="faChevron" class="ace-icon fa fa-chevron-down"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="widget-body">
+                                    <div class="widget-main">
+                                        <form action="/ace/roles/create.html" method="get"
+                                              class="form-horizontal pageForm" id="roleForm"
+                                              role="form">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label no-padding-right"
+                                                       for="roleCode"> Role Code </label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" id="roleCode" name="roleCode" required="required"
+                                                           placeholder="Role Code"
+                                                           class="col-xs-10 col-sm-5"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label no-padding-right"
+                                                       for="roleName"> Role Name </label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" id="roleName" name="roleName" required="required"
+                                                           placeholder="Role Name"
+                                                           class="form-control"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input name="select" type="checkbox" class="ace"/>
+                                                        <span class="lbl">select</span>
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input name="update" type="checkbox" class="ace"/>
+                                                        <span class="lbl">update</span>
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input name="insert" type="checkbox" class="ace"/>
+                                                        <span class="lbl">insert</span>
+                                                    </label>
+                                                </div>
+                                                <div class=" checkbox">
+                                                    <label>
+                                                        <input name="delete" type="checkbox" class="ace"/>
+                                                        <span class="lbl">delete</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <div class="clearfix form-actions">
+                                                <div class="col-md-offset-3 col-md-9">
+                                                    <button class="btn btn-info" type="submit" id="createRoleBtn">
+                                                        <i class="ace-icon fa fa-check bigger-110"></i>
+                                                        Submit
+                                                    </button>
+
+                                                    &nbsp; &nbsp; &nbsp;
+                                                    <button class="btn" type="reset">
+                                                        <i class="ace-icon fa fa-undo bigger-110"></i>
+                                                        Reset
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div><!-- /.span -->
+                        </div>
+
+                        <!-- PAGE CONTENT ENDS -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+        </div>
+    </div><!-- /.main-content -->
+
+    <div class="footer" th:include="ace/pb-pages/footer :: footer">
+    </div>
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"
+       th:include="ace/pb-pages/btn-scroll-up :: btn-scroll-up">
+    </a>
+</div><!-- /.main-container -->
+
+<div th:include="ace/pb-pages/common-script :: common-script"></div>
+<!-- page specific plugin scripts -->
+
+
+</body>
+</html>
