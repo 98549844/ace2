@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="ace/pb-pages/header :: header">
+    <!-- inline styles related to this page -->
+</head>
+
+<body class="no-skin">
+<div id="navbar" class="navbar navbar-default ace-save-state"
+     th:include="ace/pb-pages/navbar :: navbar"></div>
+
+<div class="main-container ace-save-state" id="main-container">
+    <script type="text/javascript">
+        try {
+            ace.settings.loadState('main-container')
+        } catch (e) {
+        }
+    </script>
+
+    <div id="sidebar" class="sidebar responsive ace-save-state"
+         th:include="ace/pb-pages/sidebar :: sidebar">
+    </div>
+
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs" th:include="ace/pb-pages/breadcrumbs :: breadcrumbs"></div>
+            <div class="page-content">
+                <div class="ace-settings-container" id="ace-settings-container"
+                     th:include="ace/pb-pages/ace-settings-container :: ace-settings-container">
+                </div><!-- /.ace-settings-container -->
+
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+
+                        <div class="error-container">
+                            <div class="well">
+                                <h1 class="grey lighter smaller">
+											<span class="blue bigger-125">
+												<i class="ace-icon fa fa-random"></i>
+												500
+											</span>
+                                    Something Went Wrong
+                                </h1>
+
+                                <hr />
+                                <h3 class="lighter smaller">
+                                    But we are working
+                                    <i class="ace-icon fa fa-wrench icon-animated-wrench bigger-125"></i>
+                                    on it!
+                                </h3>
+
+                                <div class="space"></div>
+
+                                <div>
+                                    <h4 class="lighter smaller">Meanwhile, try one of the following:</h4>
+
+                                    <ul class="list-unstyled spaced inline bigger-110 margin-15">
+                                        <li>
+                                            <i class="ace-icon fa fa-hand-o-right blue"></i>
+                                            Read the faq
+                                        </li>
+
+                                        <li>
+                                            <i class="ace-icon fa fa-hand-o-right blue"></i>
+                                            Give us more info on how this specific error occurred!
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <hr />
+                                <div class="space"></div>
+
+                                <div class="center">
+                                    <a href="javascript:history.back()" class="btn btn-grey">
+                                        <i class="ace-icon fa fa-arrow-left"></i>
+                                        Go Back
+                                    </a>
+
+                                    <a href="#" class="btn btn-primary">
+                                        <i class="ace-icon fa fa-tachometer"></i>
+                                        Dashboard
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PAGE CONTENT ENDS -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+        </div>
+    </div><!-- /.main-content -->
+
+    <div class="footer" th:include="ace/pb-pages/footer :: footer">
+    </div>
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"
+       th:include="ace/pb-pages/btn-scroll-up :: btn-scroll-up">
+    </a>
+</div><!-- /.main-container -->
+
+<div th:include="ace/pb-pages/common-script :: common-script"></div>
+</body>
+</html>
