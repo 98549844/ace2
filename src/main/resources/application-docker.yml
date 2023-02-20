@@ -1,0 +1,220 @@
+server:
+  port: 8088
+  tomcat:
+    uri-encoding: UTF-8
+    connection-timeout: 60000
+  servlet:
+    encoding:
+      charset: UTF-8
+    #context-path: 配置上下文
+
+# Sa-Token配置
+sa-token:
+  # token名称 (同时也是cookie名称)
+  token-name: satoken
+  # token有效期，单位s 默认30天, -1代表永不过期
+  timeout: 2592000
+  # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
+  activity-timeout: 1800
+  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  is-concurrent: false
+  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  is-share: false
+  # token风格
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: true
+
+
+#showSql
+logging:
+  level:
+    #root logging mode
+    root: info
+    com:
+      mapper: debug
+
+
+# mybatis 配置
+mybatis:
+  mapper-locations: classpath:com/mapper/xml/*.xml
+  #type-aliases-package: com/entity/dao/mybatis
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# 存储转码视频的文件夹地址
+#app:
+#  video-folder: "C:\\ACE\\videos"
+
+spring:
+  devtools:
+    restart:
+      enabled: false
+      additional-paths: src/main/java
+
+  mail:
+    host: smtp.qq.com
+    username: 87548744@qq.com
+    password: pyriobyuiqvxbgdc
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+    default-encoding: UTF-8
+    port: 465
+    protocol: smtps
+
+  mvc:
+    static-path-pattern: /static/** # js ,css 等静态文件路径
+    pathmatch:
+      matching-strategy: ant_path_matcher
+      #Failed to start bean "documentationPluginsBootstrapper"的解决方法
+      #Spring Boot 2.6.X使用PathPatternMatcher匹配路径,
+      #Swagger引用的Springfox使用的路径匹配是基于AntPathMatcher的,
+      #添加配置spring.mvc.pathmatch.matching-strategy=ANT_PATH_MATCHER
+
+  thymeleaf:
+    cache: false
+    mode: HTML
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
+    template-resolver-order: 1
+    check-template-location: true
+    prefix: classpath:/templates/
+    suffix: .html
+
+  #    redirect to resource/templates/xxx/xxx.html
+  #    Controller
+  #    return "/xxx/xxx"
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: -1 #不限制文件大小 100MB
+      max-request-size: -1 #不限制请求体大小 100MB
+      location: "${java.io.tmpdir}" #临时IO目录
+      resolve-lazily: false #不延迟解析
+      file-size-threshold: 1MB # 超过1Mb, 就IO到临时目录
+  #  web:
+  #    resources:
+  #      static-locations:
+  #        - "classpath:/static/"
+  #        - "file:${app.video-folder}"
+
+  datasource:
+    #driver-class-name: org.mariadb.jdbc.Driver
+    #url: jdbc:mariadb://localhost:3306/ace?characterEncoding=UTF-8&useSSL=false&useTimezone=true&serverTimezone=GMT%2B8
+    #    url: jdbc:log4jdbc:mysql://localhost:3306/ace?characterEncoding=UTF-8&useSSL=false&useTimezone=true&serverTimezone=GMT%2B8
+    url: jdbc:log4jdbc:mysql://192.168.31.90:3306/ace?characterEncoding=UTF-8&useUnicode=true&useSSL=false&useTimezone=true&serverTimezone=GMT%2B8
+    #driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    username: root
+    password: root
+
+    #    remote:
+    #      #spring.datasource.url 数据库的 JDBC URL。
+    #      #spring.datasource.jdbc-url 用来重写自定义连接池
+    #      jdbc-url: jdbc:log4jdbc:mariadb://localhost:3306/ace_remote?characterEncoding=UTF-8&useSSL=false&useTimezone=true&serverTimezone=GMT%2B8
+    #      driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    #      username: root
+    #      password: garlamau
+
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 5
+      # 空闲连接存活最大时间，默认600000（10分钟）
+      idle-timeout: 180000
+      # 连接池最大连接数，默认是10
+      maximum-pool-size: 10
+      # 此属性控制从池返回的连接的默认自动提交行为,默认值：true
+      auto-commit: true
+      # 连接池名称
+      pool-name: MyHikariCP
+      # 此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟
+      max-lifetime: 1800000
+      # 数据库连接超时时间,默认30秒，即30000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+
+  jpa:
+    hibernate:
+      naming:
+        #使用驼峰式命名生成table
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: update
+      #create:
+      #根据entity新建表, 原table不动
+      #create-drop:
+      #把表删了再重建
+      #update:
+      #第一次启动根据实体建立表结构，之后启动会根据实体的改变更新表结构，之前的数据都在
+      #validate:
+      #会验证创建数据库表结构，只会和数据库中的表进行比较，不会创建新表，
+      #但是会插入新值，运行程序会校验实体字段与数据库已有的表的字段类型是否相同，不同会报错
+    #去掉WARN spring.jpa.open-in-view is enabled by default
+    open-in-view: true
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        #use_sql_comments: true
+        #对应的entity
+
+  redis:
+    # Redis服务器地址
+    host: localhost
+    # Redis服务器连接端口
+    port: 6379
+
+  rabbitmq:
+    #producer
+    addresses: 192.168.31.131:5672
+    connection-timeout: 15000
+    username: garlam
+    password: garlamau
+    virtual-host:
+
+    #自定义springboot banner
+    #  main:
+    #    banner-mode: log
+    #  banner:
+    #    charset: utf-8
+    #    image:
+    #      location: banner.png
+    #      bitdepth: 4
+    #      height: 70
+    #      width: 100
+    #      invert: false
+    #      margin: 2
+    #      pixelmode: text
+    #    location: banner.txt
+
+    #receiver
+    #rabbitmq:
+    #    addresses: 192.168.11.71:5672,192.168.11.72:5672,192.168.11.71:5673
+    #    connection-timeout: 15000
+    #    listener:
+    #      # 最好不要在代码里写死配置信息，尽量使用这种方式也就是配置文件的方式
+    #      # 在代码里使用 	${}	方式进行设置配置: ${spring.rabbitmq.listener.order.exchange.name}
+    #order:
+    #exchange:
+    #durable: true
+    #key: order.*
+    #name: order-exchange
+    #type: topic
+    ## 表示消费者消费成功消息以后需要手工的进行签收(ack)，默认为auto
+    #simple:
+    #acknowledge-mode: manual
+    #concurrency: 5
+    #max-concurrency: 10
+    #prefetch: 1
+    #password: guest
+    #username: guest
+    #virtual-host: /
