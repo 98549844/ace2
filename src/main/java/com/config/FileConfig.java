@@ -19,7 +19,7 @@ import javax.servlet.MultipartConfigElement;
 
 @Component
 public class FileConfig implements WebMvcConfigurer {
-    private static Logger log = LogManager.getLogger(FileConfig.class.getName());
+    private static final Logger log = LogManager.getLogger(FileConfig.class.getName());
 
     @Bean
     public MultipartConfigElement multipartConfigElement() {

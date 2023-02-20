@@ -28,7 +28,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfig {
-    private static Logger log = LogManager.getLogger(RedisConfig.class.getName());
+    private static final Logger log = LogManager.getLogger(RedisConfig.class.getName());
 
     @Bean
     @SuppressWarnings("unchecked")

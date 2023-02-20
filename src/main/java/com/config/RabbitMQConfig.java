@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfig {
-    private static Logger log = LogManager.getLogger(RabbitMQConfig.class.getName());
+    private static final Logger log = LogManager.getLogger(RabbitMQConfig.class.getName());
 
     public static final String QUEUE = "direct_queue";
     public static final String TOPIC_QUEUE1 = "topic.queue1";

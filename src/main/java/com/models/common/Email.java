@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class Email {
-    private static Logger log = LogManager.getLogger(Email.class.getName());
+    private static final Logger log = LogManager.getLogger(Email.class.getName());
 
     private String from;
     @NotNull

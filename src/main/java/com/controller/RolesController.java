@@ -29,7 +29,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/ace")
 public class RolesController extends CommonController {
-    private static Logger log = LogManager.getLogger(RolesController.class.getName());
+    private static final Logger log = LogManager.getLogger(RolesController.class.getName());
 
     private final RolesService rolesService;
 

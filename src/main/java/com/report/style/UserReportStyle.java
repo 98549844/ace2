@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 
 public class UserReportStyle {
-    private static Logger log = LogManager.getLogger(UserReportStyle.class.getName());
+    private static final Logger log = LogManager.getLogger(UserReportStyle.class.getName());
 
 
 }

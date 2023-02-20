@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @PropertySource(value = {"classpath:swagger2.properties"}, encoding = "UTF-8", name = "swagger2.properties")
 @PropertySource(value = {"classpath:application.yml"}, encoding = "UTF-8", name = "application.yml")
 public class AceConfig {
-    private static Logger log = LogManager.getLogger(AceConfig.class.getName());
+    private static final Logger log = LogManager.getLogger(AceConfig.class.getName());
     @Value("${ace.name}")
     private String name;
     @Value("${ace.version}")

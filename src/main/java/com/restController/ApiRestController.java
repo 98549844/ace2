@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/rest/api")
 @Api(tags = "api")
 public class ApiRestController {
-    private static Logger log = LogManager.getLogger(ApiRestController.class.getName());
+    private static final Logger log = LogManager.getLogger(ApiRestController.class.getName());
 
     private final AceApi aceApi;
 

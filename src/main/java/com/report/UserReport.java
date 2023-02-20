@@ -38,7 +38,7 @@ import java.sql.SQLException;
 
 
 public class UserReport {
-    private static Logger log = LogManager.getLogger(UserReport.class.getName());
+    private static final Logger log = LogManager.getLogger(UserReport.class.getName());
     private ReportConfig reportConfig;
 
 

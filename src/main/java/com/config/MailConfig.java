@@ -18,7 +18,7 @@ import java.util.Properties;
 
 @Configuration
 public class MailConfig {
-    private static Logger log = LogManager.getLogger(MailConfig.class.getName());
+    private static final Logger log = LogManager.getLogger(MailConfig.class.getName());
 
     @Bean
     public JavaMailSender getJavaMailSender() {

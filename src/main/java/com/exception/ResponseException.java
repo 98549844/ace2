@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 
 public class ResponseException extends RuntimeException{
-    private static Logger log = LogManager.getLogger(ResponseException.class.getName());
+    private static final Logger log = LogManager.getLogger(ResponseException.class.getName());
 
     //异常错误编码
     private int code ;

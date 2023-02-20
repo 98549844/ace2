@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 
 public class AjaxResponse {
-    private static Logger log = LogManager.getLogger(AjaxResponse.class.getName());
+    private static final Logger log = LogManager.getLogger(AjaxResponse.class.getName());
 
 
     private boolean isOk;

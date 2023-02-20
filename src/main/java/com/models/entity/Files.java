@@ -20,7 +20,7 @@ import javax.persistence.*;
 @Table(name = "files", uniqueConstraints = {@UniqueConstraint(name = "constraint_fileName", columnNames = {"fileName", "path"})})
 @Entity
 public class Files extends BaseEntity {
-    private static Logger log = LogManager.getLogger(Files.class.getName());
+    private static final Logger log = LogManager.getLogger(Files.class.getName());
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
