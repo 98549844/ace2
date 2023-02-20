@@ -1,0 +1,47 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+*.log
+*.ear
+.mvn
+src/main/resources/log4j
+#src/main/java/com/config/RabbitMQConfig.java
+#src/main/java/com/config/RedisConfig.java
+#src/main/java/com/restController/RabbitMQRestController.java
+#src/main/java/com/restController/RedisRestController.java
+#src/main/java/com/service/RedisService.java
+#src/main/resources/application-dev.yml
+doc/cloudFlared/windows/cloudflared-windows-amd64.exe
+
+
+
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
