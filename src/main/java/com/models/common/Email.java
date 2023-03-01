@@ -34,13 +34,13 @@ public class Email {
         this.attachmentsPath = attachmentsPath;
     }
 
-    public static Logger getLog() {
-        return log;
-    }
+//     public static Logger getLog() {
+//         return log;
+//     }
 
-    public static void setLog(Logger log) {
-        Email.log = log;
-    }
+//     public static void setLog(Logger log) {
+//         Email.log = log;
+//     }
 
     public String getFrom() {
         return from;
