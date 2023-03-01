@@ -57,13 +57,13 @@ public class Files extends BaseEntity {
     @Column
     private String remark = "default path:" + AceEnvironment.getFilePath();
 
-    public static Logger getLog() {
-        return log;
-    }
+//     public static Logger getLog() {
+//         return log;
+//     }
 
-    public static void setLog(Logger log) {
-        Files.log = log;
-    }
+//     public static void setLog(Logger log) {
+//         Files.log = log;
+//     }
 
     public Long getId() {
         return id;
