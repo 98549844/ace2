@@ -107,7 +107,8 @@ public class FFmpegUtil {
         stringBuilder.append("#EXTM3U").append(separator);
         stringBuilder.append("#EXT-X-STREAM-INF:BANDWIDTH=" + bandWidth).append(separator);  // 码率
         stringBuilder.append(indexPath);
-        Files.writeString(Paths.get(file), stringBuilder.toString(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+      //  Files.writeString(Paths.get(file), stringBuilder.toString(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        Files.write(Paths.get(file), stringBuilder.toString().getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
     }
 
     /**
